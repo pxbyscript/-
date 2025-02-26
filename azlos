@@ -23,9 +23,9 @@ local usernameTrade = ""
 
 -- 転生ファーム
 local rebamount = 0
-local autoRebirthStoppingPointCooldown = 0.5
 local autoRebirthCooldown = 0.5
 local rebirthSuccessful = false
+local instantRebirthAmount = 0
 
 -- オーブファーム
 local orbCooldown = 0.4
@@ -114,7 +114,7 @@ local alienCrystal = false
 local desertCrystal = false
 local electroCrystal = false
 
--- 関数
+-- レース関数
 game:GetService('ReplicatedStorage').raceInProgress.Changed:Connect(function()
 	if autoRace2 == true then		
 		if game:GetService('ReplicatedStorage').raceInProgress.Value == true then
@@ -135,6 +135,58 @@ game:GetService('ReplicatedStorage').raceStarted.Changed:Connect(function()
 		wait(2)
 	end
 end)
+
+-- 最少プレイヤーのサーバーに移動する関数
+local function LowestPlayer()
+    local Http = game:GetService("HttpService")
+    local TPS = game:GetService("TeleportService")
+    local Api = "https://games.roblox.com/v1/games/"
+    local _place = game.PlaceId
+    local _servers = Api.._place.."/servers/Public?sortOrder=Asc&limit=100"
+    function ListServers(cursor)
+        local Raw = game:HttpGet(_servers .. ((cursor and "&cursor="..cursor) or ""))
+        return Http:JSONDecode(Raw)
+    end
+    local Server, Next; repeat
+    local Servers = ListServers(Next)
+    Server = Servers.data[1]
+    Next = Servers.nextPageCursor
+    until Server
+    TPS:TeleportToPlaceInstance(_place,Server.id,game.Players.LocalPlayer)
+end
+
+-- 再接続関数
+local function Rejoin()
+    local ts = game:GetService("TeleportService")
+    local p = game:GetService("Players").LocalPlayer
+    ts:TeleportToPlaceInstance(game.PlaceId, game.JobId, p)
+end
+
+-- サーバーホップ関数
+local function Serverhop()
+    local Http = game:GetService("HttpService")
+    local TPS = game:GetService("TeleportService")
+    local Api = "https://games.roblox.com/v1/games/"
+    local _place = game.PlaceId
+    local _servers = Api.._place.."/servers/Public?sortOrder=Desc&limit=100"
+    function ListServers(cursor)
+        local Raw = game:HttpGet(_servers .. ((cursor and "&cursor="..cursor) or ""))
+        return Http:JSONDecode(Raw)
+    end
+    local Server, Next
+    repeat
+        local Servers = ListServers(Next)
+        Server = nil
+        for _, s in ipairs(Servers.data) do
+            if s.maxPlayers > s.playing then
+                Server = s
+                break
+            end
+        end
+        Next = Servers.nextPageCursor
+    until Server
+    TPS:TeleportToPlaceInstance(_place, Server.id, game.Players.LocalPlayer)    
+end
 
 -- タブ
 local Tab1 = Window:CreateTab("一般")
@@ -652,6 +704,88 @@ Tab2:CreateToggle("自動オーブ", function(state)
     end
 end)
 
+-- 転生ファーム
+Tab3:CreateSection("転生設定")
+Tab3:CreateBox("目標転生を入力", function(input)
+    rebamount = tonumber(input) or 0
+end)
+Tab3:AddBox("転生クールダウンを入力", function(input)
+    local inputNumber = tonumber(input)
+    if inputNumber then
+        autoRebirthCooldown = inputNumber / 100
+    else
+        autoRebirthCooldown = 0.5
+    end
+end)
+
+Tab3:CreateSection("転生ファーム")
+Tab3:AddToggle("自動転生", function(state)
+    if state then 
+        autoRebirth = true
+        while autoRebirth do 
+            wait()
+            game:GetService("ReplicatedStorage").rEvents.rebirthEvent:FireServer("rebirthRequest")
+            wait(autoRebirthCooldown)
+        end 
+    else 
+        autoRebirth = false
+    end 
+end)
+Tab3:AddToggle("自動ターゲット転生", function(state)
+    if state then 
+        autoRebirthStoppingPoint = true
+        while autoRebirthStoppingPoint do 
+            wait()
+            local success, err = pcall(function()
+                local rebirthsBefore = game.Players.LocalPlayer.leaderstats.Rebirths.Value
+                game:GetService("ReplicatedStorage").rEvents.rebirthEvent:FireServer("rebirthRequest")
+                wait(autoRebirthCooldown)
+                local rebirthsAfter = game.Players.LocalPlayer.leaderstats.Rebirths.Value
+                if rebirthsAfter > rebirthsBefore then
+                    rebirthSuccessful = true
+                    wait(autoRebirthCooldown)
+                    rebirthSuccessful = false
+                end
+                if rebirthsAfter >= rebamount then
+                    autoRebirthStoppingPoint = false
+                    autoRebirth = false
+                    autoOrb1 = false
+                    autoOrb2 = false
+                    autoOrb3 = false
+                end
+            end)
+            if not success then
+                autoRebirthStoppingPoint = false
+                autoRebirth = false
+                autoOrb1 = false
+                autoOrb2 = false
+                autoOrb3 = false
+            end
+        end 
+    else 
+        autoRebirthStoppingPoint = false
+        autoRebirth = false
+        autoOrb1 = false
+        autoOrb2 = false
+        autoOrb3 = false
+    end 
+end)
+
+Tab3:CreateSection("即時転生")
+Tab3:AddBox("即時転生量を入力", function(input)
+    local inputNumber = tonumber(input)
+    if inputNumber then
+        instantRebirthAmount = inputNumber
+    else
+        instantRebirthAmount = 0
+    end
+end)
+Tab3:CreateButton("起動", function()
+    for i = 1, instantRebirthAmount do
+        game:GetService("ReplicatedStorage").rEvents.rebirthEvent:FireServer("rebirthRequest")
+    end
+end)
+
 -- ペットの孵化
 Tab4:CreateSection("基本ペットを孵化")
 Tab4:CreateDropdown("ペットを選択", {"赤いウサギ","赤い子猫","青いウサギ","銀の犬",'黄色いスクイーク'}, function(input)
@@ -1046,3 +1180,462 @@ Tab5:CreateToggle("自動進化",function(state)
     end  
 end)
 Tab5:CreateLabel("先にインベントリを空けて!")
+
+-- クリスタル
+Tab6:CreateSection("シティクリスタル")
+Tab6:CreateToggle("レッドクリスタル",function(state)
+    if state then 
+        redCrystal = true 
+        while redCrystal == true do wait() 
+            local args = {
+                [1] = "openCrystal",
+                [2] = "Red Crystal"
+            }
+            game:GetService("ReplicatedStorage"):WaitForChild("rEvents"):WaitForChild("openCrystalRemote"):InvokeServer(unpack(args))
+        end 
+    else 
+        redCrystal = false 
+    end 
+end)
+Tab6:CreateToggle("ライトニングクリスタル",function(state)
+    if state then 
+        lightningCrystal = true 
+        while lightningCrystal == true do wait() 
+            local args = {
+                [1] = "openCrystal",
+                [2] = "Lightning Crystal"
+            }
+            game:GetService("ReplicatedStorage"):WaitForChild("rEvents"):WaitForChild("openCrystalRemote"):InvokeServer(unpack(args))
+        end 
+    else 
+        lightningCrystal = false 
+    end 
+end)
+Tab6:CreateToggle("イエロークリスタル",function(state)
+    if state then 
+        yellowCrystal = true 
+        while yellowCrystal == true do wait() 
+            local args = {
+                [1] = "openCrystal",
+                [2] = "Yellow Crystal"
+            }
+            game:GetService("ReplicatedStorage"):WaitForChild("rEvents"):WaitForChild("openCrystalRemote"):InvokeServer(unpack(args))
+        end 
+    else 
+        yellowCrystal = false 
+    end 
+end)
+Tab6:CreateToggle("パープルクリスタル",function(state)
+    if state then 
+        purpleCrystal = true 
+        while purpleCrystal == true do wait() 
+            local args = {
+                [1] = "openCrystal",
+                [2] = "Purple Crystal"
+            }
+            game:GetService("ReplicatedStorage"):WaitForChild("rEvents"):WaitForChild("openCrystalRemote"):InvokeServer(unpack(args))
+        end 
+    else 
+        purpleCrystal = false 
+    end 
+end)
+Tab6:CreateToggle("ブルークリスタル",function(state)
+    if state then 
+        blueCrystal = true 
+        while blueCrystal == true do wait() 
+            local args = {
+                [1] = "openCrystal",
+                [2] = "Blue Crystal"
+            }
+            game:GetService("ReplicatedStorage"):WaitForChild("rEvents"):WaitForChild("openCrystalRemote"):InvokeServer(unpack(args))
+        end 
+    else 
+        blueCrystal = false 
+    end 
+end)
+Tab6:CreateToggle("スノークリスタル",function(state)
+    if state then 
+        snowCrystal = true 
+        while snowCrystal == true do wait() 
+            local args = {
+                [1] = "openCrystal",
+                [2] = "Snow Crystal"
+            }
+            game:GetService("ReplicatedStorage"):WaitForChild("rEvents"):WaitForChild("openCrystalRemote"):InvokeServer(unpack(args))
+        end 
+    else 
+        snowCrystal = false 
+    end
+end)
+Tab6:CreateToggle("ラヴァクリスタル",function(state)
+    if state then 
+        lavaCrystal = true 
+        while lavaCrystal == true do wait() 
+            local args = {
+                [1] = "openCrystal",
+                [2] = "Lava Crystal"
+            }
+            game:GetService("ReplicatedStorage"):WaitForChild("rEvents"):WaitForChild("openCrystalRemote"):InvokeServer(unpack(args))
+        end 
+    else 
+        lavaCrystal = false 
+    end 
+end)
+Tab6:CreateToggle("インフェルノクリスタル",function(state)
+    if state then 
+        infernoCrystal = true 
+        while infernoCrystal == true do wait() 
+            local args = {
+                [1] = "openCrystal",
+                [2] = "Inferno Crystal"
+            }
+            game:GetService("ReplicatedStorage"):WaitForChild("rEvents"):WaitForChild("openCrystalRemote"):InvokeServer(unpack(args))
+        end 
+    else 
+        infernoCrystal = false 
+    end 
+end)
+Tab6:CreateToggle("エレクトロレジェンズクリスタル",function(state)
+    if state then 
+        electroLegendsCrystal = true 
+        while electroLegendsCrystal == true do wait() 
+            local args = {
+                [1] = "openCrystal",
+                [2] = "Electro Legends Crystal"
+            }
+            game:GetService("ReplicatedStorage"):WaitForChild("rEvents"):WaitForChild("openCrystalRemote"):InvokeServer(unpack(args))
+        end 
+    else 
+        electroLegendsCrystal = false 
+    end 
+end)
+Tab6:CreateToggle("ジャングルクリスタル",function(state)
+    if state then 
+        jungleCrystal = true 
+        while jungleCrystal == true do wait() 
+            local args = {
+                [1] = "openCrystal",
+                [2] = "Jungle Crystal"
+            }
+            game:GetService("ReplicatedStorage"):WaitForChild("rEvents"):WaitForChild("openCrystalRemote"):InvokeServer(unpack(args))
+        end 
+    else 
+        jungleCrystal = false 
+    end 
+end)
+Tab6:CreateSection("スペースクリスタル")
+Tab6:CreateToggle("スペースクリスタル",function(state)
+    if state then 
+        spaceCrystal = true 
+        while spaceCrystal == true do wait() 
+            local args = {
+                [1] = "openCrystal",
+                [2] = "Space Crystal"
+            }
+            game:GetService("ReplicatedStorage"):WaitForChild("rEvents"):WaitForChild("openCrystalRemote"):InvokeServer(unpack(args))
+        end 
+    else 
+        spaceCrystal = false 
+    end 
+end)
+Tab6:CreateToggle("エイリアンクリスタル",function(state)
+    if state then 
+        alienCrystal = true 
+        while alienCrystal == true do wait() 
+            local args = {
+                [1] = "openCrystal",
+                [2] = "Alien Crystal"
+            }
+            game:GetService("ReplicatedStorage"):WaitForChild("rEvents"):WaitForChild("openCrystalRemote"):InvokeServer(unpack(args))
+        end 
+    else 
+        alienCrystal = false 
+    end 
+end)
+Tab6:CreateSection("デザートクリスタル")
+Tab6:CreateToggle("デザートクリスタル",function(state)
+    if state then 
+        desertCrystal = true 
+        while desertCrystal == true do wait() 
+            local args = {
+                [1] = "openCrystal",
+                [2] = "Desert Crystal"
+            }
+            game:GetService("ReplicatedStorage"):WaitForChild("rEvents"):WaitForChild("openCrystalRemote"):InvokeServer(unpack(args))
+        end 
+    else 
+        desertCrystal = false 
+    end 
+end)
+Tab6:CreateToggle("エレクトロクリスタル",function(state)
+    if state then 
+        electroCrystal = true 
+        while electroCrystal == true do wait() 
+            local args = {
+                [1] = "openCrystal",
+                [2] = "Electro Crystal"
+            }
+            game:GetService("ReplicatedStorage"):WaitForChild("rEvents"):WaitForChild("openCrystalRemote"):InvokeServer(unpack(args))
+        end 
+    else 
+        electroCrystal = false 
+    end 
+end)
+Tab6:CreateLabel("先にインベントリを空けて!")
+
+-- 究極
+Tab7:CreateSection("転生ペットを購入")
+Tab7:CreateButton("マグゾール",function()
+    local args = {
+        [1] = "upgradeUltimate",
+        [2] = "Magzor"
+    }
+    
+    game:GetService("ReplicatedStorage"):WaitForChild("rEvents"):WaitForChild("ultimatesRemote"):InvokeServer(unpack(args))       
+end)
+Tab7:CreateButton("クラウドサーファー",function()
+    local args = {
+        [1] = "upgradeUltimate",
+        [2] = "Crowd Surfer"
+    }
+    
+    game:GetService("ReplicatedStorage"):WaitForChild("rEvents"):WaitForChild("ultimatesRemote"):InvokeServer(unpack(args))       
+end)
+Tab7:CreateButton("ソレンゾ",function()
+    local args = {
+        [1] = "upgradeUltimate",
+        [2] = "Sorenzo"
+    }
+    
+    game:GetService("ReplicatedStorage"):WaitForChild("rEvents"):WaitForChild("ultimatesRemote"):InvokeServer(unpack(args))       
+end)
+Tab7:CreateSection("ゲームアップグレードを購入")
+Tab7:CreateButton("x2 トレイルブースト",function()
+    local args = {
+        [1] = "upgradeUltimate",
+        [2] = "x2 Trail Boosts"
+    }
+    
+    game:GetService("ReplicatedStorage"):WaitForChild("rEvents"):WaitForChild("ultimatesRemote"):InvokeServer(unpack(args))
+end)
+Tab7:CreateButton("+1 ペットスロット",function()
+    local args = {
+        [1] = "upgradeUltimate",
+        [2] = "+1 Pet Slot"
+    }
+    
+    game:GetService("ReplicatedStorage"):WaitForChild("rEvents"):WaitForChild("ultimatesRemote"):InvokeServer(unpack(args))
+end)
+Tab7:CreateButton("+10 アイテム容量",function()
+    local args = {
+        [1] = "upgradeUltimate",
+        [2] = "+10 Item Capacity"
+    }
+    
+    game:GetService("ReplicatedStorage"):WaitForChild("rEvents"):WaitForChild("ultimatesRemote"):InvokeServer(unpack(args))
+end)
+Tab7:CreateButton("+1 デイリースピン",function()
+    local args = {
+        [1] = "upgradeUltimate",
+        [2] = "+1 Daily Spin"
+    }
+    
+    game:GetService("ReplicatedStorage"):WaitForChild("rEvents"):WaitForChild("ultimatesRemote"):InvokeServer(unpack(args))
+end)
+Tab7:CreateButton("x2 チェスト報酬",function()
+    local args = {
+        [1] = "upgradeUltimate",
+        [2] = "x2 Chest Rewards"
+    }
+    
+    game:GetService("ReplicatedStorage"):WaitForChild("rEvents"):WaitForChild("ultimatesRemote"):InvokeServer(unpack(args))
+end)
+Tab7:CreateButton("x2 クエスト報酬",function()
+    local args = {
+        [1] = "upgradeUltimate",
+        [2] = "x2 Quest Rewards"
+    }
+    
+    game:GetService("ReplicatedStorage"):WaitForChild("rEvents"):WaitForChild("ultimatesRemote"):InvokeServer(unpack(args))
+end)
+Tab7:CreateSection("強化を購入")
+Tab7:CreateButton("ジェムブースター",function()
+    local args = {
+        [1] = "upgradeUltimate",
+        [2] = "Gem Booster"
+    }
+    
+    game:GetService("ReplicatedStorage"):WaitForChild("rEvents"):WaitForChild("ultimatesRemote"):InvokeServer(unpack(args))
+end)
+Tab7:CreateButton("ステップブースター",function()
+    local args = {
+        [1] = "upgradeUltimate",
+        [2] = "Step Booster"
+    }
+    
+    game:GetService("ReplicatedStorage"):WaitForChild("rEvents"):WaitForChild("ultimatesRemote"):InvokeServer(unpack(args))
+end)
+Tab7:CreateButton("インフェルノジェム",function()
+    local args = {
+        [1] = "upgradeUltimate",
+        [2] = "Infernal Gems"
+    }
+    
+    game:GetService("ReplicatedStorage"):WaitForChild("rEvents"):WaitForChild("ultimatesRemote"):InvokeServer(unpack(args))
+end)
+Tab7:CreateButton("エセリアルオーブ",function()
+    local args = {
+        [1] = "upgradeUltimate",
+        [2] = "Ethereal Orbs"
+    }
+    
+    game:GetService("ReplicatedStorage"):WaitForChild("rEvents"):WaitForChild("ultimatesRemote"):InvokeServer(unpack(args))
+end)
+Tab7:CreateButton("デーモンフープ",function()
+    local args = {
+        [1] = "upgradeUltimate",
+        [2] = "Demon Hoops"
+    }
+    
+    game:GetService("ReplicatedStorage"):WaitForChild("rEvents"):WaitForChild("ultimatesRemote"):InvokeServer(unpack(args))
+end)
+Tab7:CreateButton("ディヴァインリバース",function()
+    local args = {
+        [1] = "upgradeUltimate",
+        [2] = "Divine Rebirth"
+    }
+    
+    game:GetService("ReplicatedStorage"):WaitForChild("rEvents"):WaitForChild("ultimatesRemote"):InvokeServer(unpack(args))
+end)
+
+Tab8:CreateSection("都市テレポート")  
+Tab8:CreateDropdown("目的地を選択", {"シティ","スノーシティ","マグマシティ","レジェンズハイウェイ","スピードジャングル"}, function(input)
+    if input == "シティ" then
+        citiesteleport = input
+    elseif input == "スノーシティ" then
+        citiesteleport = input
+    elseif input == "マグマシティ" then
+        citiesteleport = input
+    elseif input == "レジェンズハイウェイ" then
+        citiesteleport = input
+    elseif input == "スピードジャングル" then
+        citiesteleport = input
+    end
+end)
+Tab8:CreateButton("テレポート", function()
+    if citiesteleport == "シティ" then
+        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-9682.98828, 74.8522873, 3099.03394, 0.087131381, 0, 0.996196866, 0, 1, 0, -0.996196866, 0, 0.087131381)
+    elseif citiesteleport == "スノーシティ" then
+        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-9676.13867, 74.8522873, 3782.69385, 0, 0, -1, 0, 1, 0, 1, 0, 0)
+    elseif citiesteleport == "マグマシティ" then
+        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-11054.9688, 232.791656, 4898.62842)
+    elseif citiesteleport == "レジェンズハイウェイ" then
+        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-13098.8711, 232.791656, 5907.62793)
+    elseif citiesteleport == "スピードジャングル" then
+        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-15274,399,5576)
+    end
+end)
+
+Tab8:CreateSection("その他のテレポート")  
+Tab8:CreateDropdown("目的地を選択", {"デザートレース","マグマレース","グラスランドレース","スペースワールド","デザートワールド"}, function(input)
+    if input == "デザートレース" then
+        otherteleport = input
+    elseif input == "マグマレース" then
+        otherteleport = input
+    elseif input == "グラスランドレース" then
+        otherteleport = input
+    elseif input == "スペースワールド" then
+        otherteleport = input
+    elseif input == "デザートワールド" then
+        otherteleport = input
+    end
+end)
+Tab8:CreateButton("テレポート", function()
+    if otherteleport == "デザートレース" then
+        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(48.3109131, 36.3147125, -8680.45312)
+    elseif otherteleport == "マグマレース" then
+        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(1001.33118, 36.3147125, -10986.2178)
+    elseif otherteleport == "グラスランドレース" then
+        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(1686.07495, 36.3147125, -5946.63428)
+    elseif otherteleport == "スペースワールド" then
+        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-331.764069, 5.45415115, 585.201721)
+    elseif otherteleport == "デザートワールド" then
+        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(2519.90063, 15.7072296, 4355.74072)
+    end
+end)
+
+Tab8:CreateSection("スペーステレポート")  
+Tab8:CreateDropdown("目的地を選択", {"+1000 フープ","スターウェイレース"}, function(input)
+    if input == "+1000 フープ" then
+        spaceteleport = input
+    elseif input == "スターウェイレース" then
+        spaceteleport = input
+    end
+end)
+Tab8:CreateButton("テレポート", function()
+    if spaceteleport == "+1000 フープ" then
+        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-477,156,755)
+    elseif spaceteleport == "スターウェイレース" then
+        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-5018,29,-4779)
+    end
+end)
+
+Tab8:CreateSection("デザートテレポート")  
+Tab8:CreateDropdown("目的地を選択", {"+8000 フープ","スピードウェイレース","セカンドアイランド"}, function(input)
+    if input == "+8000 フープ" then
+        desertteleport = input
+    elseif input == "スピードウェイレース" then
+        desertteleport = input
+    elseif input == "セカンドアイランド" then
+        desertteleport = input
+    end
+end)
+Tab8:CreateButton("テレポート", function()
+    if desertteleport == "+8000 フープ" then
+        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-3386,259,16916)
+    elseif desertteleport == "スピードウェイレース" then
+        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(663,28,9767)
+    elseif desertteleport == "セカンドアイランド" then
+        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-10517,621,-5)
+    end
+end)
+
+Tab8:CreateSection("ワールドテレポート")  
+Tab8:CreateDropdown("目的地を選択", {"シティ","スペース","デザート"}, function(dtp)
+    if dtp == "シティ" then
+        premiumTeleport = dtp
+    elseif dtp == "スペース" then
+        premiumTeleport = dtp
+    elseif dtp == "デザート" then
+        premiumTeleport = dtp
+    end
+end)
+Tab8:CreateButton("テレポート", function()
+    if premiumTeleport == "シティ" then
+        game:GetService("TeleportService"):Teleport(3101667897)
+    elseif premiumTeleport == "スペース" then
+        game:GetService("TeleportService"):Teleport(3232996272)
+    elseif premiumTeleport == "デザート" then
+        game:GetService("TeleportService"):Teleport(3276265788)
+    end
+end)
+
+Tab8:CreateSection("サーバーナビゲーション")  
+Tab8:CreateDropdown("ナビゲーションタイプを選択", {"最少プレイヤー数","サーバーホップ","再接続"}, function(ptp)
+    if ptp == "最少プレイヤー数" then
+        premiumServerTeleport = ptp
+    elseif ptp == "サーバーホップ" then
+        premiumServerTeleport = ptp
+    elseif ptp == "再接続" then
+        premiumServerTeleport = ptp
+    end
+end)
+Tab8:CreateButton("ナビゲート", function()
+    if premiumServerTeleport == "最少プレイヤー数" then
+        LowestPlayer()
+    elseif premiumServerTeleport == "サーバーホップ" then
+        Serverhop()
+    elseif premiumServerTeleport == "再接続" then
+        Rejoin()
+    end
+end)
