@@ -842,6 +842,7 @@ Tab4:CreateToggle("自動孵化",function(state)
         hatchOmegaPets = false 
     end  
 end)
+Tab4:CreateLabel("先にインベントリを空けて!")
 
 -- 基本ペットの進化
 Tab5:CreateSection("基本ペットの進化")
@@ -1044,3 +1045,4 @@ Tab5:CreateToggle("自動進化",function(state)
         evolveOmegaPets = false 
     end  
 end)
+Tab5:CreateLabel("先にインベントリを空けて!")
