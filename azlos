@@ -613,49 +613,10 @@ Tab2:CreateDropdown("都市を選択", {"都市","雪の都市","マグマの都
         optionCity3 = "Desert"
     end
 end)
-Tab2:CreateDropdown("オーブ乗数を選択", {"500オーブ","550オーブ","600オーブ","650オーブ","700オーブ","750オーブ","800オーブ","850オーブ","900オーブ","950オーブ","1000オーブ","1050オーブ","1100オーブ","1150オーブ","1200オーブ","1250オーブ","1300オーブ","1350オーブ","1400オーブ","1450オーブ","1500オーブ"}, function(selected)
-    if selected == "500オーブ" then
-        orbMultiplier3 = 500
-    elseif selected == "550オーブ" then
-        orbMultiplier3 = 550
-    elseif selected == "600オーブ" then
-        orbMultiplier3 = 600
-    elseif selected == "650オーブ" then
-        orbMultiplier3 = 650
-    elseif selected == "700オーブ" then
-        orbMultiplier3 = 700
-    elseif selected == "750オーブ" then
-        orbMultiplier3 = 750
-    elseif selected == "800オーブ" then
-        orbMultiplier3 = 800
-    elseif selected == "850オーブ" then
-        orbMultiplier3 = 850
-    elseif selected == "900オーブ" then
-        orbMultiplier3 = 900
-    elseif selected == "950オーブ" then
-        orbMultiplier3 = 950
-    elseif selected == "1000オーブ" then
-        orbMultiplier3 = 1000
-    elseif selected == "1050オーブ" then
-        orbMultiplier3 = 1050
-    elseif selected == "1100オーブ" then
-        orbMultiplier3 = 1100
-    elseif selected == "1150オーブ" then
-        orbMultiplier3 = 1150
-    elseif selected == "1200オーブ" then
-        orbMultiplier3 = 1200
-    elseif selected == "1250オーブ" then
-        orbMultiplier3 = 1250
-    elseif selected == "1300オーブ" then
-        orbMultiplier3 = 1300
-    elseif selected == "1350オーブ" then
-        orbMultiplier3 = 1350
-    elseif selected == "1400オーブ" then
-        orbMultiplier3 = 1400
-    elseif selected == "1450オーブ" then
-        orbMultiplier3 = 1450
-    elseif selected == "1500オーブ" then
-        orbMultiplier3 = 1500
+Tab2:CreateBox("オーブの速度を入力", function(input)
+    local inputNumber = tonumber(input)
+    if inputNumber then
+        orbMultiplier3 = inputNumber
     end
 end)
 Tab2:CreateToggle("自動オーブ", function(state)
@@ -689,4 +650,397 @@ Tab2:CreateToggle("自動オーブ", function(state)
     else 
         autoOrb3 = false
     end
+end)
+
+-- ペットの孵化
+Tab4:AddSection("基本ペットを孵化")
+Tab4:AddDropdown("ペットを選択", {"赤いウサギ","赤い子猫","青いウサギ","銀の犬",'黄色いスクイーク'}, function(input)
+    if input == "赤いウサギ" then
+        selectedbasicpettohatch = "Red Bunny"
+    elseif input == "赤い子猫" then
+        selectedbasicpettohatch = "Red Kitty"
+    elseif input == "青いウサギ" then
+        selectedbasicpettohatch = "Blue Bunny"
+    elseif input == "銀の犬" then
+        selectedbasicpettohatch = "Silver Dog"
+    elseif input == "黄色いスクイーク" then
+        selectedbasicpettohatch = "Yellow Squeak"
+    end        
+end)
+Tab4:AddToggle("自動孵化",function(state)
+    if state then 
+        hatchBasicPets = true 
+        while hatchBasicPets == true do wait() 
+            local args = { 
+                [1] = game:GetService("ReplicatedStorage"):WaitForChild("cPetShopFolder"):WaitForChild(selectedbasicpettohatch)
+            }
+            game:GetService("ReplicatedStorage"):WaitForChild("cPetShopRemote"):InvokeServer(unpack(args)) 
+        end 
+    else 
+        hatchBasicPets = false 
+    end  
+end)
+
+Tab4:AddSection("上級ペットを孵化")
+Tab4:AddDropdown("ペットを選択", {"緑のヴァンピー","ダークゴーレム","ピンクの蝶","黄色い蝶","緑のゴーレム"}, function(input)
+    if input == "緑のヴァンピー" then
+        selectedadvancedpettohatch = "Green Vampy"
+    elseif input == "ダークゴーレム" then
+        selectedadvancedpettohatch = "Dark Golem"
+    elseif input == "ピンクの蝶" then
+        selectedadvancedpettohatch = "Pink Butterfly"
+    elseif input == "黄色い蝶" then
+        selectedadvancedpettohatch = "Yellow Butterfly"
+    elseif input == "緑のゴーレム" then
+        selectedadvancedpettohatch = "Green Golem"
+    end        
+end)
+Tab4:AddToggle("自動孵化",function(state)
+    if state then 
+        hatchAdvancedPets = true 
+        while hatchAdvancedPets == true do wait() 
+            local args = { 
+                [1] = game:GetService("ReplicatedStorage"):WaitForChild("cPetShopFolder"):WaitForChild(selectedadvancedpettohatch)
+            }
+            game:GetService("ReplicatedStorage"):WaitForChild("cPetShopRemote"):InvokeServer(unpack(args)) 
+        end 
+    else 
+        hatchAdvancedPets = false 
+    end  
+end)
+
+Tab4:AddSection("レアペットを孵化")
+Tab4:AddDropdown("ペットを選択", {"紫のペガサス","ゴールデンエンジェル","オレンジのペガサス","オレンジのファルコン","青いファイアキャスター","白いフェニックス","赤いフェニックス","赤いファイアキャスター"}, function(input)
+    if input == "紫のペガサス" then
+        selectedrarepettohatch = "Purple Pegasus"
+    elseif input == "ゴールデンエンジェル" then
+        selectedrarepettohatch = "Golden Angel"
+    elseif input == "オレンジのペガサス" then
+        selectedrarepettohatch = "Orange Pegasus"
+    elseif input == "オレンジのファルコン" then
+        selectedrarepettohatch = "Orange Falcon"
+    elseif input == "青いファイアキャスター" then
+        selectedrarepettohatch = "Blue Firecaster"
+    elseif input == "白いフェニックス" then
+        selectedrarepettohatch = "White Phoenix"
+    elseif input == "赤いフェニックス" then
+        selectedrarepettohatch = "Red Phoenix"
+    elseif input == "赤いファイアキャスター" then
+        selectedrarepettohatch = "Red Firecaster"
+    end        
+end)
+Tab4:AddToggle("自動孵化",function(state)
+    if state then 
+        hatchRarePets = true 
+        while hatchRarePets == true do wait() 
+            local args = { 
+                [1] = game:GetService("ReplicatedStorage"):WaitForChild("cPetShopFolder"):WaitForChild(selectedrarepettohatch)
+            }
+            game:GetService("ReplicatedStorage"):WaitForChild("cPetShopRemote"):InvokeServer(unpack(args)) 
+        end 
+    else 
+        hatchRarePets = false 
+    end  
+end)
+
+Tab4:AddSection("エピックペットを孵化")
+Tab4:AddDropdown("ペットを選択", {"ゴールデンフェニックス","緑のファイアキャスター","ボルテックファルコン","青いフェニックス","ディバインペガサス"}, function(input)
+    if input == "ゴールデンフェニックス" then
+        selectedepicpettohatch = "Golden Phoenix"
+    elseif input == "緑のファイアキャスター" then
+        selectedepicpettohatch = "Green Firecaster"
+    elseif input == "ボルテックファルコン" then
+        selectedepicpettohatch = "Voltaic Falcon"
+    elseif input == "青いフェニックス" then
+        selectedepicpettohatch = "Blue Phoenix"
+    elseif input == "ディバインペガサス" then
+        selectedepicpettohatch = "Divine Pegasus"
+    end
+end)    
+Tab4:AddToggle("自動孵化",function(state)
+    if state then 
+        hatchEpicPets = true 
+        while hatchEpicPets == true do wait() 
+            local args = { 
+                [1] = game:GetService("ReplicatedStorage"):WaitForChild("cPetShopFolder"):WaitForChild(selectedepicpettohatch)
+            }
+            game:GetService("ReplicatedStorage"):WaitForChild("cPetShopRemote"):InvokeServer(unpack(args)) 
+        end 
+    else 
+        hatchEpicPets = false 
+    end  
+end)
+
+Tab4:AddSection("ユニークペットを孵化")
+Tab4:AddDropdown("ペットを選択", {"フレイミングハリネズミ","エレクトログーレム","ボルテックファルコン","ヴォイドドラゴン","ウルトラバーディ","クオンタムドラゴン","ツンドラドラゴン","マジックバタフライ","マエストロドッグ","ゴールデンバイキング","スピーディセンセイ"}, function(input)
+    if input == "フレイミングハリネズミ" then
+        selecteduniquepettohatch = "Flaming Hedgehog"
+    elseif input == "エレクトログーレム" then
+        selecteduniquepettohatch = "Electro Golem"
+    elseif input == "ボルテックファルコン" then
+        selecteduniquepettohatch = "Voltaic Falcon"
+    elseif input == "ヴォイドドラゴン" then
+        selecteduniquepettohatch = "Void Dragon"
+    elseif input == "ウルトラバーディ" then
+        selecteduniquepettohatch = "Ultra Birdie"
+    elseif input == "クオンタムドラゴン" then
+        selecteduniquepettohatch = "Quantum Dragon"
+    elseif input == "ツンドラドラゴン" then
+        selecteduniquepettohatch = "Tundra Dragon"
+    elseif input == "マジックバタフライ" then
+        selecteduniquepettohatch = "Magic Butterfly"
+    elseif input == "マエストロドッグ" then
+        selecteduniquepettohatch = "Maestro Dog"
+    elseif input == "ゴールデンバイキング" then
+        selecteduniquepettohatch = "Golden Viking"
+    elseif input == "スピーディセンセイ" then
+        selecteduniquepettohatch = "Speedy Sensei"
+    end
+end)    
+Tab4:AddToggle("自動孵化",function(state)
+    if state then 
+        hatchUniquePets = true 
+        while hatchUniquePets == true do wait() 
+            local args = { 
+                [1] = game:GetService("ReplicatedStorage"):WaitForChild("cPetShopFolder"):WaitForChild(selecteduniquepettohatch)
+            }
+            game:GetService("ReplicatedStorage"):WaitForChild("cPetShopRemote"):InvokeServer(unpack(args)) 
+        end 
+    else 
+        hatchUniquePets = false 
+    end  
+end)
+
+Tab4:AddSection("オメガペットを孵化")
+Tab4:AddDropdown("ペットを選択", {"ソウルフュージョンドッグ","ハイパーソニックペガサス","ダークソウルバーディ","エターナルネビュラドラゴン","シャドウズエッジキティ","アルティメットオーバードライブバニー","スウィフトサムライ"}, function(input)
+    if input == "ソウルフュージョンドッグ" then
+        selectedomegapettohatch = "Soul Fusion Dog"
+    elseif input == "ハイパーソニックペガサス" then
+        selectedomegapettohatch = "Hypersonic Pegasus"
+    elseif input == "ダークソウルバーディ" then
+        selectedomegapettohatch = "Dark Soul Birdie"
+    elseif input == "エターナルネビュラドラゴン" then
+        selectedomegapettohatch = "Eternal Nebula Dragon"
+    elseif input == "シャドウズエッジキティ" then
+        selectedomegapettohatch = "Shadows Edge Kitty"
+    elseif input == "アルティメットオーバードライブバニー" then
+        selectedomegapettohatch = "Ultimate Overdrive Bunny"
+    elseif input == "スウィフトサムライ" then
+        selectedomegapettohatch = "Swift Samurai"
+    end
+end)     
+Tab4:AddToggle("自動孵化",function(state)
+    if state then 
+        hatchOmegaPets = true 
+        while hatchOmegaPets == true do wait() 
+            local args = { 
+                [1] = game:GetService("ReplicatedStorage"):WaitForChild("cPetShopFolder"):WaitForChild(selectedomegapettohatch)
+            }
+            game:GetService("ReplicatedStorage"):WaitForChild("cPetShopRemote"):InvokeServer(unpack(args)) 
+        end 
+    else 
+        hatchOmegaPets = false 
+    end  
+end)
+
+-- 基本ペットの進化
+Tab5:AddSection("基本ペットの進化")
+Tab5:AddDropdown("ペットを選択", {"レッドバニー","レッドキティ","ブルーバニー","シルバードッグ",'イエロースクイーク'}, function(input)
+    if input == "レッドバニー" then
+        selectedbasicpettoevolve = "Red Bunny"
+    elseif input == "レッドキティ" then
+        selectedbasicpettoevolve = "Red Kitty"
+    elseif input == "ブルーバニー" then
+        selectedbasicpettoevolve = "Blue Bunny"
+    elseif input == "シルバードッグ" then
+        selectedbasicpettoevolve = "Silver Dog"
+    elseif input == "イエロースクイーク" then
+        selectedbasicpettoevolve = "Yellow Squeak"
+    end
+end)
+Tab5:AddToggle("自動進化",function(state)
+    if state then 
+        evolveBasicPets = true 
+        while evolveBasicPets == true do wait() 
+            local args = {
+                [1] = "evolvePet",
+                [2] = selectedbasicpettoevolve
+            }
+            game:GetService("ReplicatedStorage"):WaitForChild("rEvents"):WaitForChild("petEvolveEvent"):FireServer(unpack(args)) 
+        end 
+    else 
+        evolveBasicPets = false 
+    end  
+end)
+
+-- 上級ペットの進化
+Tab5:AddSection("上級ペットの進化")
+Tab5:AddDropdown("ペットを選択", {"グリーンヴァンピー","ダークゴーレム","ピンクバタフライ","イエローバタフライ","グリーンゴーレム"}, function(input)
+    if input == "グリーンヴァンピー" then
+        selectedadvancedpettoevolve = "Green Vampy"
+    elseif input == "ダークゴーレム" then
+        selectedadvancedpettoevolve = "Dark Golem"
+    elseif input == "ピンクバタフライ" then
+        selectedadvancedpettoevolve = "Pink Butterfly"
+    elseif input == "イエローバタフライ" then
+        selectedadvancedpettoevolve = "Yellow Butterfly"
+    elseif input == "グリーンゴーレム" then
+        selectedadvancedpettoevolve = "Green Golem"
+    end
+end)
+Tab5:AddToggle("自動進化",function(state)
+    if state then 
+        evolveAdvancedPets = true 
+        while evolveAdvancedPets == true do wait() 
+            local args = {
+                [1] = "evolvePet",
+                [2] = selectedadvancedpettoevolve
+            }
+            game:GetService("ReplicatedStorage"):WaitForChild("rEvents"):WaitForChild("petEvolveEvent"):FireServer(unpack(args)) 
+        end 
+    else 
+        evolveAdvancedPets = false 
+    end  
+end)
+
+-- レアペットの進化
+Tab5:AddSection("レアペットの進化")
+Tab5:AddDropdown("ペットを選択", {"パープルペガサス","ゴールデンエンジェル","オレンジペガサス","オレンジファルコン","ブルーファイアキャスター","ホワイトフェニックス","レッドフェニックス","レッドファイアキャスター"}, function(input)
+    if input == "パープルペガサス" then
+        selectedrarepettoevolve = "Purple Pegasus"
+    elseif input == "ゴールデンエンジェル" then
+        selectedrarepettoevolve = "Golden Angel"
+    elseif input == "オレンジペガサス" then
+        selectedrarepettoevolve = "Orange Pegasus"
+    elseif input == "オレンジファルコン" then
+        selectedrarepettoevolve = "Orange Falcon"
+    elseif input == "ブルーファイアキャスター" then
+        selectedrarepettoevolve = "Blue Firecaster"
+    elseif input == "ホワイトフェニックス" then
+        selectedrarepettoevolve = "White Phoenix"
+    elseif input == "レッドフェニックス" then
+        selectedrarepettoevolve = "Red Phoenix"
+    elseif input == "レッドファイアキャスター" then
+        selectedrarepettoevolve = "Red Firecaster"
+    end
+end)
+Tab5:AddToggle("自動進化",function(state)
+    if state then 
+        evolveRarePets = true 
+        while evolveRarePets == true do wait() 
+            local args = {
+                [1] = "evolvePet",
+                [2] = selectedrarepettoevolve
+            }
+            game:GetService("ReplicatedStorage"):WaitForChild("rEvents"):WaitForChild("petEvolveEvent"):FireServer(unpack(args)) 
+        end 
+    else 
+        evolveRarePets = false 
+    end  
+end)
+
+-- エピックペットの進化
+Tab5:AddSection("エピックペットの進化")
+Tab5:AddDropdown("ペットを選択", {"ゴールデンフェニックス","グリーンファイアキャスター","ボルタイックファルコン","ブルーフェニックス","ディヴァインペガサス"}, function(input)
+    if input == "ゴールデンフェニックス" then
+        selectedepicpettoevolve = "Golden Phoenix"
+    elseif input == "グリーンファイアキャスター" then
+        selectedepicpettoevolve = "Green Firecaster"
+    elseif input == "ボルタイックファルコン" then
+        selectedepicpettoevolve = "Voltaic Falcon"
+    elseif input == "ブルーフェニックス" then
+        selectedepicpettoevolve = "Blue Phoenix"
+    elseif input == "ディヴァインペガサス" then
+        selectedepicpettoevolve = "Divine Pegasus"
+    end
+end)
+Tab5:AddToggle("自動進化",function(state)
+    if state then 
+        evolveEpicPets = true 
+        while evolveEpicPets == true do wait() 
+            local args = {
+                [1] = "evolvePet",
+                [2] = selectedepicpettoevolve
+            }
+            game:GetService("ReplicatedStorage"):WaitForChild("rEvents"):WaitForChild("petEvolveEvent"):FireServer(unpack(args)) 
+        end 
+    else 
+        evolveEpicPets = false 
+    end  
+end)
+
+-- ユニークペットの進化
+Tab5:AddSection("ユニークペットの進化")
+Tab5:AddDropdown("ペットを選択", {"フレイミングヘッジホッグ","エレクトログーレム","ボルタイックファルコン","ヴォイドドラゴン","ウルトラバーディ","クアンタムドラゴン","ツンドラドラゴン","マジックバタフライ","マエストロドッグ","ゴールデンバイキング","スピーディーセンセイ"}, function(input)
+    if input == "フレイミングヘッジホッグ" then
+        selecteduniquepettoevolve = "Flaming Hedgehog"
+    elseif input == "エレクトログーレム" then
+        selecteduniquepettoevolve = "Electro Golem"
+    elseif input == "ボルタイックファルコン" then
+        selecteduniquepettoevolve = "Voltaic Falcon"
+    elseif input == "ヴォイドドラゴン" then
+        selecteduniquepettoevolve = "Void Dragon"
+    elseif input == "ウルトラバーディ" then
+        selecteduniquepettoevolve = "Ultra Birdie"
+    elseif input == "クアンタムドラゴン" then
+        selecteduniquepettoevolve = "Quantum Dragon"
+    elseif input == "ツンドラドラゴン" then
+        selecteduniquepettoevolve = "Tundra Dragon"
+    elseif input == "マジックバタフライ" then
+        selecteduniquepettoevolve = "Magic Butterfly"
+    elseif input == "マエストロドッグ" then
+        selecteduniquepettoevolve = "Maestro Dog"
+    elseif input == "ゴールデンバイキング" then
+        selecteduniquepettoevolve = "Golden Viking"
+    elseif input == "スピーディーセンセイ" then
+        selecteduniquepettoevolve = "Speedy Sensei"
+    end
+end)
+Tab5:AddToggle("自動進化",function(state)
+    if state then 
+        evolveUniquePets = true 
+        while evolveUniquePets == true do wait() 
+            local args = {
+                [1] = "evolvePet",
+                [2] = selecteduniquepettoevolve
+            }
+            game:GetService("ReplicatedStorage"):WaitForChild("rEvents"):WaitForChild("petEvolveEvent"):FireServer(unpack(args)) 
+        end 
+    else 
+        evolveUniquePets = false 
+    end  
+end)
+
+-- オメガペットの進化
+Tab5:AddSection("オメガペットの進化")
+Tab5:AddDropdown("ペットを選択", {"ソウルフュージョンドッグ","ハイパーソニックペガサス","ダークソウルバーディ","エターナルネビュラドラゴン","シャドウズエッジキティ","アルティメットオーバードライブバニー","スウィフトサムライ"}, function(input)
+    if input == "ソウルフュージョンドッグ" then
+        selectedomegapettoevolve = "Soul Fusion Dog"
+    elseif input == "ハイパーソニックペガサス" then
+        selectedomegapettoevolve = "Hypersonic Pegasus"
+    elseif input == "ダークソウルバーディ" then
+        selectedomegapettoevolve = "Dark Soul Birdie"
+    elseif input == "エターナルネビュラドラゴン" then
+        selectedomegapettoevolve = "Eternal Nebula Dragon"
+    elseif input == "シャドウズエッジキティ" then
+        selectedomegapettoevolve = "Shadows Edge Kitty"
+    elseif input == "アルティメットオーバードライブバニー" then
+        selectedomegapettoevolve = "Ultimate Overdrive Bunny"
+    elseif input == "スウィフトサムライ" then
+        selectedomegapettoevolve = "Swift Samurai"
+    end
+end)
+Tab5:AddToggle("自動進化",function(state)
+    if state then 
+        evolveOmegaPets = true 
+        while evolveOmegaPets == true do wait() 
+            local args = {
+                [1] = "evolvePet",
+                [2] = selectedomegapettoevolve
+            }
+            game:GetService("ReplicatedStorage"):WaitForChild("rEvents"):WaitForChild("petEvolveEvent"):FireServer(unpack(args)) 
+        end 
+    else 
+        evolveOmegaPets = false 
+    end  
 end)
