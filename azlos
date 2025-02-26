@@ -653,7 +653,7 @@ Tab2:CreateToggle("自動オーブ", function(state)
 end)
 
 -- ペットの孵化
-Tab4:AddSection("基本ペットを孵化")
+Tab4:CreateSection("基本ペットを孵化")
 Tab4:AddDropdown("ペットを選択", {"赤いウサギ","赤い子猫","青いウサギ","銀の犬",'黄色いスクイーク'}, function(input)
     if input == "赤いウサギ" then
         selectedbasicpettohatch = "Red Bunny"
@@ -667,7 +667,7 @@ Tab4:AddDropdown("ペットを選択", {"赤いウサギ","赤い子猫","青い
         selectedbasicpettohatch = "Yellow Squeak"
     end        
 end)
-Tab4:AddToggle("自動孵化",function(state)
+Tab4:CreateToggle("自動孵化",function(state)
     if state then 
         hatchBasicPets = true 
         while hatchBasicPets == true do wait() 
@@ -681,7 +681,7 @@ Tab4:AddToggle("自動孵化",function(state)
     end  
 end)
 
-Tab4:AddSection("上級ペットを孵化")
+Tab4:CreateSection("上級ペットを孵化")
 Tab4:AddDropdown("ペットを選択", {"緑のヴァンピー","ダークゴーレム","ピンクの蝶","黄色い蝶","緑のゴーレム"}, function(input)
     if input == "緑のヴァンピー" then
         selectedadvancedpettohatch = "Green Vampy"
@@ -695,7 +695,7 @@ Tab4:AddDropdown("ペットを選択", {"緑のヴァンピー","ダークゴー
         selectedadvancedpettohatch = "Green Golem"
     end        
 end)
-Tab4:AddToggle("自動孵化",function(state)
+Tab4:CreateToggle("自動孵化",function(state)
     if state then 
         hatchAdvancedPets = true 
         while hatchAdvancedPets == true do wait() 
@@ -709,7 +709,7 @@ Tab4:AddToggle("自動孵化",function(state)
     end  
 end)
 
-Tab4:AddSection("レアペットを孵化")
+Tab4:CreateSection("レアペットを孵化")
 Tab4:AddDropdown("ペットを選択", {"紫のペガサス","ゴールデンエンジェル","オレンジのペガサス","オレンジのファルコン","青いファイアキャスター","白いフェニックス","赤いフェニックス","赤いファイアキャスター"}, function(input)
     if input == "紫のペガサス" then
         selectedrarepettohatch = "Purple Pegasus"
@@ -729,7 +729,7 @@ Tab4:AddDropdown("ペットを選択", {"紫のペガサス","ゴールデンエ
         selectedrarepettohatch = "Red Firecaster"
     end        
 end)
-Tab4:AddToggle("自動孵化",function(state)
+Tab4:CreateToggle("自動孵化",function(state)
     if state then 
         hatchRarePets = true 
         while hatchRarePets == true do wait() 
@@ -743,7 +743,7 @@ Tab4:AddToggle("自動孵化",function(state)
     end  
 end)
 
-Tab4:AddSection("エピックペットを孵化")
+Tab4:CreateSection("エピックペットを孵化")
 Tab4:AddDropdown("ペットを選択", {"ゴールデンフェニックス","緑のファイアキャスター","ボルテックファルコン","青いフェニックス","ディバインペガサス"}, function(input)
     if input == "ゴールデンフェニックス" then
         selectedepicpettohatch = "Golden Phoenix"
@@ -757,7 +757,7 @@ Tab4:AddDropdown("ペットを選択", {"ゴールデンフェニックス","緑
         selectedepicpettohatch = "Divine Pegasus"
     end
 end)    
-Tab4:AddToggle("自動孵化",function(state)
+Tab4:CreateToggle("自動孵化",function(state)
     if state then 
         hatchEpicPets = true 
         while hatchEpicPets == true do wait() 
@@ -771,7 +771,7 @@ Tab4:AddToggle("自動孵化",function(state)
     end  
 end)
 
-Tab4:AddSection("ユニークペットを孵化")
+Tab4:CreateSection("ユニークペットを孵化")
 Tab4:AddDropdown("ペットを選択", {"フレイミングハリネズミ","エレクトログーレム","ボルテックファルコン","ヴォイドドラゴン","ウルトラバーディ","クオンタムドラゴン","ツンドラドラゴン","マジックバタフライ","マエストロドッグ","ゴールデンバイキング","スピーディセンセイ"}, function(input)
     if input == "フレイミングハリネズミ" then
         selecteduniquepettohatch = "Flaming Hedgehog"
@@ -797,7 +797,7 @@ Tab4:AddDropdown("ペットを選択", {"フレイミングハリネズミ","エ
         selecteduniquepettohatch = "Speedy Sensei"
     end
 end)    
-Tab4:AddToggle("自動孵化",function(state)
+Tab4:CreateToggle("自動孵化",function(state)
     if state then 
         hatchUniquePets = true 
         while hatchUniquePets == true do wait() 
@@ -811,7 +811,7 @@ Tab4:AddToggle("自動孵化",function(state)
     end  
 end)
 
-Tab4:AddSection("オメガペットを孵化")
+Tab4:CreateSection("オメガペットを孵化")
 Tab4:AddDropdown("ペットを選択", {"ソウルフュージョンドッグ","ハイパーソニックペガサス","ダークソウルバーディ","エターナルネビュラドラゴン","シャドウズエッジキティ","アルティメットオーバードライブバニー","スウィフトサムライ"}, function(input)
     if input == "ソウルフュージョンドッグ" then
         selectedomegapettohatch = "Soul Fusion Dog"
@@ -829,7 +829,7 @@ Tab4:AddDropdown("ペットを選択", {"ソウルフュージョンドッグ","
         selectedomegapettohatch = "Swift Samurai"
     end
 end)     
-Tab4:AddToggle("自動孵化",function(state)
+Tab4:CreateToggle("自動孵化",function(state)
     if state then 
         hatchOmegaPets = true 
         while hatchOmegaPets == true do wait() 
@@ -844,7 +844,7 @@ Tab4:AddToggle("自動孵化",function(state)
 end)
 
 -- 基本ペットの進化
-Tab5:AddSection("基本ペットの進化")
+Tab5:CreateSection("基本ペットの進化")
 Tab5:AddDropdown("ペットを選択", {"レッドバニー","レッドキティ","ブルーバニー","シルバードッグ",'イエロースクイーク'}, function(input)
     if input == "レッドバニー" then
         selectedbasicpettoevolve = "Red Bunny"
@@ -858,7 +858,7 @@ Tab5:AddDropdown("ペットを選択", {"レッドバニー","レッドキティ
         selectedbasicpettoevolve = "Yellow Squeak"
     end
 end)
-Tab5:AddToggle("自動進化",function(state)
+Tab5:CreateToggle("自動進化",function(state)
     if state then 
         evolveBasicPets = true 
         while evolveBasicPets == true do wait() 
@@ -874,7 +874,7 @@ Tab5:AddToggle("自動進化",function(state)
 end)
 
 -- 上級ペットの進化
-Tab5:AddSection("上級ペットの進化")
+Tab5:CreateSection("上級ペットの進化")
 Tab5:AddDropdown("ペットを選択", {"グリーンヴァンピー","ダークゴーレム","ピンクバタフライ","イエローバタフライ","グリーンゴーレム"}, function(input)
     if input == "グリーンヴァンピー" then
         selectedadvancedpettoevolve = "Green Vampy"
@@ -888,7 +888,7 @@ Tab5:AddDropdown("ペットを選択", {"グリーンヴァンピー","ダーク
         selectedadvancedpettoevolve = "Green Golem"
     end
 end)
-Tab5:AddToggle("自動進化",function(state)
+Tab5:CreateToggle("自動進化",function(state)
     if state then 
         evolveAdvancedPets = true 
         while evolveAdvancedPets == true do wait() 
@@ -904,7 +904,7 @@ Tab5:AddToggle("自動進化",function(state)
 end)
 
 -- レアペットの進化
-Tab5:AddSection("レアペットの進化")
+Tab5:CreateSection("レアペットの進化")
 Tab5:AddDropdown("ペットを選択", {"パープルペガサス","ゴールデンエンジェル","オレンジペガサス","オレンジファルコン","ブルーファイアキャスター","ホワイトフェニックス","レッドフェニックス","レッドファイアキャスター"}, function(input)
     if input == "パープルペガサス" then
         selectedrarepettoevolve = "Purple Pegasus"
@@ -924,7 +924,7 @@ Tab5:AddDropdown("ペットを選択", {"パープルペガサス","ゴールデ
         selectedrarepettoevolve = "Red Firecaster"
     end
 end)
-Tab5:AddToggle("自動進化",function(state)
+Tab5:CreateToggle("自動進化",function(state)
     if state then 
         evolveRarePets = true 
         while evolveRarePets == true do wait() 
@@ -940,7 +940,7 @@ Tab5:AddToggle("自動進化",function(state)
 end)
 
 -- エピックペットの進化
-Tab5:AddSection("エピックペットの進化")
+Tab5:CreateSection("エピックペットの進化")
 Tab5:AddDropdown("ペットを選択", {"ゴールデンフェニックス","グリーンファイアキャスター","ボルタイックファルコン","ブルーフェニックス","ディヴァインペガサス"}, function(input)
     if input == "ゴールデンフェニックス" then
         selectedepicpettoevolve = "Golden Phoenix"
@@ -954,7 +954,7 @@ Tab5:AddDropdown("ペットを選択", {"ゴールデンフェニックス","グ
         selectedepicpettoevolve = "Divine Pegasus"
     end
 end)
-Tab5:AddToggle("自動進化",function(state)
+Tab5:CreateToggle("自動進化",function(state)
     if state then 
         evolveEpicPets = true 
         while evolveEpicPets == true do wait() 
@@ -970,7 +970,7 @@ Tab5:AddToggle("自動進化",function(state)
 end)
 
 -- ユニークペットの進化
-Tab5:AddSection("ユニークペットの進化")
+Tab5:CreateSection("ユニークペットの進化")
 Tab5:AddDropdown("ペットを選択", {"フレイミングヘッジホッグ","エレクトログーレム","ボルタイックファルコン","ヴォイドドラゴン","ウルトラバーディ","クアンタムドラゴン","ツンドラドラゴン","マジックバタフライ","マエストロドッグ","ゴールデンバイキング","スピーディーセンセイ"}, function(input)
     if input == "フレイミングヘッジホッグ" then
         selecteduniquepettoevolve = "Flaming Hedgehog"
@@ -996,7 +996,7 @@ Tab5:AddDropdown("ペットを選択", {"フレイミングヘッジホッグ","
         selecteduniquepettoevolve = "Speedy Sensei"
     end
 end)
-Tab5:AddToggle("自動進化",function(state)
+Tab5:CreateToggle("自動進化",function(state)
     if state then 
         evolveUniquePets = true 
         while evolveUniquePets == true do wait() 
@@ -1012,7 +1012,7 @@ Tab5:AddToggle("自動進化",function(state)
 end)
 
 -- オメガペットの進化
-Tab5:AddSection("オメガペットの進化")
+Tab5:CreateSection("オメガペットの進化")
 Tab5:AddDropdown("ペットを選択", {"ソウルフュージョンドッグ","ハイパーソニックペガサス","ダークソウルバーディ","エターナルネビュラドラゴン","シャドウズエッジキティ","アルティメットオーバードライブバニー","スウィフトサムライ"}, function(input)
     if input == "ソウルフュージョンドッグ" then
         selectedomegapettoevolve = "Soul Fusion Dog"
@@ -1030,7 +1030,7 @@ Tab5:AddDropdown("ペットを選択", {"ソウルフュージョンドッグ","
         selectedomegapettoevolve = "Swift Samurai"
     end
 end)
-Tab5:AddToggle("自動進化",function(state)
+Tab5:CreateToggle("自動進化",function(state)
     if state then 
         evolveOmegaPets = true 
         while evolveOmegaPets == true do wait() 
