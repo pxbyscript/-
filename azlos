@@ -709,7 +709,7 @@ Tab3:CreateSection("転生設定")
 Tab3:CreateBox("目標転生を入力", function(input)
     rebamount = tonumber(input) or 0
 end)
-Tab3:AddBox("転生クールダウンを入力", function(input)
+Tab3:CreateBox("転生クールダウンを入力", function(input)
     local inputNumber = tonumber(input)
     if inputNumber then
         autoRebirthCooldown = inputNumber / 100
@@ -719,7 +719,7 @@ Tab3:AddBox("転生クールダウンを入力", function(input)
 end)
 
 Tab3:CreateSection("転生ファーム")
-Tab3:AddToggle("自動転生", function(state)
+Tab3:CreateToggle("自動転生", function(state)
     if state then 
         autoRebirth = true
         while autoRebirth do 
@@ -731,7 +731,7 @@ Tab3:AddToggle("自動転生", function(state)
         autoRebirth = false
     end 
 end)
-Tab3:AddToggle("自動ターゲット転生", function(state)
+Tab3:CreateToggle("自動ターゲット転生", function(state)
     if state then 
         autoRebirthStoppingPoint = true
         while autoRebirthStoppingPoint do 
@@ -772,7 +772,7 @@ Tab3:AddToggle("自動ターゲット転生", function(state)
 end)
 
 Tab3:CreateSection("即時転生")
-Tab3:AddBox("即時転生量を入力", function(input)
+Tab3:CreateBox("即時転生量を入力", function(input)
     local inputNumber = tonumber(input)
     if inputNumber then
         instantRebirthAmount = inputNumber
