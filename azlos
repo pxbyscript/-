@@ -67,9 +67,9 @@ local premiumServerTeleport = ""
 local connectionEnhancer = false
 
 -- オーブ
-local primaryAutoOrbActive = false -- autoOrb1
-local secondaryAutoOrbActive = false -- autoOrb2
-local premiumAutoOrbActive = false -- autoOrb3
+local autoOrb1 = false
+local autoOrb2 = false
+local autoOrb3 = false
 
 -- レースファーム
 local autoRace1 = false
@@ -234,7 +234,6 @@ end)
 Tab1:CreateBox("最大ピン", function(input)
     maxPing = tonumber(input) or 2500
 end)
-Tab1:CreateLabel("デフォルト値: 400 - 2500")
 Tab1:CreateToggle("有効", function(state)
     pingMonitorActive = state
     if pingMonitorActive then
@@ -258,6 +257,7 @@ Tab1:CreateToggle("有効", function(state)
         end)
     end
 end)
+Tab1:CreateLabel("デフォルト値: 400 - 2500")
 
 Tab1:CreateSection("その他")
 Tab1:CreateToggle("接続強化", function(state)
@@ -340,5 +340,353 @@ Tab1:CreateButton("トレード送信", function()
             }
             game:GetService("ReplicatedStorage").rEvents.tradingEvent:FireServer(unpack(args))
         end
+    end
+end)
+
+-- 転生ファーム
+Tab2:CreateSection("自動ファーミング設定")
+Tab2:CreateBox("オーブのクールダウンを入力", function(input)
+    local inputNumber = tonumber(input)
+    if inputNumber then
+        orbCooldown = inputNumber / 100
+    else
+        orbCooldown = 0.6
+    end
+end)
+Tab2:CreateSection("最初のオーブ自動ファーム")
+Tab2:CreateDropdown("オーブを選択", {"黄色オーブ","オレンジオーブ","青オーブ","赤オーブ","エーテリアルオーブ","宝石","地獄の宝石"}, function(selected)
+    if selected == "黄色オーブ" then
+        optionOrb = "Yellow Orb"
+    elseif selected == "オレンジオーブ" then
+        optionOrb = "Orange Orb"
+    elseif selected == "青オーブ" then
+        optionOrb = "Blue Orb"
+    elseif selected == "赤オーブ" then
+        optionOrb = "Red Orb"
+    elseif selected == "エーテリアルオーブ" then
+        optionOrb = "Ethereal Orb"
+    elseif selected == "宝石" then
+        optionOrb = "Gem"
+    elseif selected == "地獄の宝石" then
+        optionOrb = "Infernal Gem"
+    end
+end)
+Tab2:CreateDropdown("都市を選択", {"都市","雪の都市","マグマの都市","レジェンズハイウェイ","スピードジャングル","スペース","砂漠"}, function(selected)
+    if selected == "都市" then
+        optionCity = "City"
+    elseif selected == "雪の都市" then
+        optionCity = "Snow City"
+    elseif selected == "マグマの都市" then
+        optionCity = "Magma City"
+    elseif selected == "レジェンズハイウェイ" then
+        optionCity = "Legends Highway"
+    elseif selected == "スピードジャングル" then
+        optionCity = "Speed Jungle"
+    elseif selected == "スペース" then
+        optionCity = "Space"
+    elseif selected == "砂漠" then
+        optionCity = "Desert"
+    end
+end)
+Tab2:CreateDropdown("オーブ乗数を選択", {"500オーブ","550オーブ","600オーブ","650オーブ","700オーブ","750オーブ","800オーブ","850オーブ","900オーブ","950オーブ","1000オーブ","1050オーブ","1100オーブ","1150オーブ","1200オーブ","1250オーブ","1300オーブ","1350オーブ","1400オーブ","1450オーブ","1500オーブ"}, function(selected)
+    if selected == "500オーブ" then
+        orbMultiplier = 500
+    elseif selected == "550オーブ" then
+        orbMultiplier = 550
+    elseif selected == "600オーブ" then
+        orbMultiplier = 600
+    elseif selected == "650オーブ" then
+        orbMultiplier = 650
+    elseif selected == "700オーブ" then
+        orbMultiplier = 700
+    elseif selected == "750オーブ" then
+        orbMultiplier = 750
+    elseif selected == "800オーブ" then
+        orbMultiplier = 800
+    elseif selected == "850オーブ" then
+        orbMultiplier = 850
+    elseif selected == "900オーブ" then
+        orbMultiplier = 900
+    elseif selected == "950オーブ" then
+        orbMultiplier = 950
+    elseif selected == "1000オーブ" then
+        orbMultiplier = 1000
+    elseif selected == "1050オーブ" then
+        orbMultiplier = 1050
+    elseif selected == "1100オーブ" then
+        orbMultiplier = 1100
+    elseif selected == "1150オーブ" then
+        orbMultiplier = 1150
+    elseif selected == "1200オーブ" then
+        orbMultiplier = 1200
+    elseif selected == "1250オーブ" then
+        orbMultiplier = 1250
+    elseif selected == "1300オーブ" then
+        orbMultiplier = 1300
+    elseif selected == "1350オーブ" then
+        orbMultiplier = 1350
+    elseif selected == "1400オーブ" then
+        orbMultiplier = 1400
+    elseif selected == "1450オーブ" then
+        orbMultiplier = 1450
+    elseif selected == "1500オーブ" then
+        orbMultiplier = 1500
+    end
+end)
+Tab2:CreateToggle("自動オーブ", function(state)
+    if state then 
+        autoOrb1 = true
+        while autoOrb1 do 
+            if not autoOrb1 then break end
+            if pingMonitorActive then
+                local ping = tonumber(string.match(game:GetService("Stats").Network.ServerStatsItem["Data Ping"]:GetValueString(), "%d+"))
+                if ping and ping > maxPing then
+                    repeat
+                        wait(1)
+                        ping = tonumber(string.match(game:GetService("Stats").Network.ServerStatsItem["Data Ping"]:GetValueString(), "%d+"))
+                    until ping and ping < minPing or not autoOrb1
+                    if not autoOrb1 then break end
+                end
+            end
+            local batchSize = math.ceil(orbMultiplier / 5)
+            local remainingOrbs = orbMultiplier
+            local startTime = tick()
+            while remainingOrbs > 0 do
+                local currentBatch = math.min(batchSize, remainingOrbs)
+                for i = 1, currentBatch do
+                    game:GetService('ReplicatedStorage').rEvents.orbEvent:FireServer("collectOrb", optionOrb, optionCity)
+                end
+                remainingOrbs = remainingOrbs - currentBatch
+                wait(0.11)
+            end
+            wait(orbCooldown)
+        end 
+    else 
+        autoOrb1 = false
+    end
+end)
+Tab2:CreateSection("第二のオーブ自動ファーム")
+Tab2:CreateDropdown("オーブを選択", {"黄色オーブ","オレンジオーブ","青オーブ","赤オーブ","エーテリアルオーブ","宝石","地獄の宝石"}, function(selected)
+    if selected == "黄色オーブ" then
+        optionOrb2 = "Yellow Orb"
+    elseif selected == "オレンジオーブ" then
+        optionOrb2 = "Orange Orb"
+    elseif selected == "青オーブ" then
+        optionOrb2 = "Blue Orb"
+    elseif selected == "赤オーブ" then
+        optionOrb2 = "Red Orb"
+    elseif selected == "エーテリアルオーブ" then
+        optionOrb2 = "Ethereal Orb"
+    elseif selected == "宝石" then
+        optionOrb2 = "Gem"
+    elseif selected == "地獄の宝石" then
+        optionOrb2 = "Infernal Gem"
+    end
+end)
+Tab2:CreateDropdown("都市を選択", {"都市","雪の都市","マグマの都市","レジェンズハイウェイ","スピードジャングル","スペース","砂漠"}, function(selected)
+    if selected == "都市" then
+        optionCity2 = "City"
+    elseif selected == "雪の都市" then
+        optionCity2 = "Snow City"
+    elseif selected == "マグマの都市" then
+        optionCity2 = "Magma City"
+    elseif selected == "レジェンズハイウェイ" then
+        optionCity2 = "Legends Highway"
+    elseif selected == "スピードジャングル" then
+        optionCity2 = "Speed Jungle"
+    elseif selected == "スペース" then
+        optionCity2 = "Space"
+    elseif selected == "砂漠" then
+        optionCity2 = "Desert"
+    end
+end)
+Tab2:CreateDropdown("オーブ乗数を選択", {"500オーブ","550オーブ","600オーブ","650オーブ","700オーブ","750オーブ","800オーブ","850オーブ","900オーブ","950オーブ","1000オーブ","1050オーブ","1100オーブ","1150オーブ","1200オーブ","1250オーブ","1300オーブ","1350オーブ","1400オーブ","1450オーブ","1500オーブ"}, function(selected)
+    if selected == "500オーブ" then
+        orbMultiplier2 = 500
+    elseif selected == "550オーブ" then
+        orbMultiplier2 = 550
+    elseif selected == "600オーブ" then
+        orbMultiplier2 = 600
+    elseif selected == "650オーブ" then
+        orbMultiplier2 = 650
+    elseif selected == "700オーブ" then
+        orbMultiplier2 = 700
+    elseif selected == "750オーブ" then
+        orbMultiplier2 = 750
+    elseif selected == "800オーブ" then
+        orbMultiplier2 = 800
+    elseif selected == "850オーブ" then
+        orbMultiplier2 = 850
+    elseif selected == "900オーブ" then
+        orbMultiplier2 = 900
+    elseif selected == "950オーブ" then
+        orbMultiplier2 = 950
+    elseif selected == "1000オーブ" then
+        orbMultiplier2 = 1000
+    elseif selected == "1050オーブ" then
+        orbMultiplier2 = 1050
+    elseif selected == "1100オーブ" then
+        orbMultiplier2 = 1100
+    elseif selected == "1150オーブ" then
+        orbMultiplier2 = 1150
+    elseif selected == "1200オーブ" then
+        orbMultiplier2 = 1200
+    elseif selected == "1250オーブ" then
+        orbMultiplier2 = 1250
+    elseif selected == "1300オーブ" then
+        orbMultiplier2 = 1300
+    elseif selected == "1350オーブ" then
+        orbMultiplier2 = 1350
+    elseif selected == "1400オーブ" then
+        orbMultiplier2 = 1400
+    elseif selected == "1450オーブ" then
+        orbMultiplier2 = 1450
+    elseif selected == "1500オーブ" then
+        orbMultiplier2 = 1500
+    end
+end)
+Tab2:CreateToggle("自動オーブ", function(state)
+    if state then 
+        autoOrb2 = true
+        while autoOrb2 do 
+            if not autoOrb2 then break end
+            if pingMonitorActive then
+                local ping = tonumber(string.match(game:GetService("Stats").Network.ServerStatsItem["Data Ping"]:GetValueString(), "%d+"))
+                if ping and ping > maxPing then
+                    repeat
+                        wait(1)
+                        ping = tonumber(string.match(game:GetService("Stats").Network.ServerStatsItem["Data Ping"]:GetValueString(), "%d+"))
+                    until ping and ping < minPing or not autoOrb2
+                    if not autoOrb2 then break end
+                end
+            end
+            local batchSize = math.ceil(orbMultiplier2 / 5)
+            local remainingOrbs = orbMultiplier2
+            local startTime = tick()
+            while remainingOrbs > 0 do
+                local currentBatch = math.min(batchSize, remainingOrbs)
+                for i = 1, currentBatch do
+                    game:GetService('ReplicatedStorage').rEvents.orbEvent:FireServer("collectOrb", optionOrb2, optionCity2)
+                end
+                remainingOrbs = remainingOrbs - currentBatch
+                wait(0.11)
+            end
+            wait(orbCooldown)
+        end 
+    else 
+        autoOrb2 = false
+    end
+end)
+
+Tab2:CreateSection("第三のオーブ自動ファーム")
+Tab2:CreateDropdown("オーブを選択", {"黄色オーブ","オレンジオーブ","青オーブ","赤オーブ","エーテリアルオーブ","宝石","地獄の宝石"}, function(selected)
+    if selected == "黄色オーブ" then
+        optionOrb3 = "Yellow Orb"
+    elseif selected == "オレンジオーブ" then
+        optionOrb3 = "Orange Orb"
+    elseif selected == "青オーブ" then
+        optionOrb3 = "Blue Orb"
+    elseif selected == "赤オーブ" then
+        optionOrb3 = "Red Orb"
+    elseif selected == "エーテリアルオーブ" then
+        optionOrb3 = "Ethereal Orb"
+    elseif selected == "宝石" then
+        optionOrb3 = "Gem"
+    elseif selected == "地獄の宝石" then
+        optionOrb3 = "Infernal Gem"
+    end
+end)
+Tab2:CreateDropdown("都市を選択", {"都市","雪の都市","マグマの都市","レジェンズハイウェイ","スピードジャングル","スペース","砂漠"}, function(selected)
+    if selected == "都市" then
+        optionCity3 = "City"
+    elseif selected == "雪の都市" then
+        optionCity3 = "Snow City"
+    elseif selected == "マグマの都市" then
+        optionCity3 = "Magma City"
+    elseif selected == "レジェンズハイウェイ" then
+        optionCity3 = "Legends Highway"
+    elseif selected == "スピードジャングル" then
+        optionCity3 = "Speed Jungle"
+    elseif selected == "スペース" then
+        optionCity3 = "Space"
+    elseif selected == "砂漠" then
+        optionCity3 = "Desert"
+    end
+end)
+Tab2:CreateDropdown("オーブ乗数を選択", {"500オーブ","550オーブ","600オーブ","650オーブ","700オーブ","750オーブ","800オーブ","850オーブ","900オーブ","950オーブ","1000オーブ","1050オーブ","1100オーブ","1150オーブ","1200オーブ","1250オーブ","1300オーブ","1350オーブ","1400オーブ","1450オーブ","1500オーブ"}, function(selected)
+    if selected == "500オーブ" then
+        orbMultiplier3 = 500
+    elseif selected == "550オーブ" then
+        orbMultiplier3 = 550
+    elseif selected == "600オーブ" then
+        orbMultiplier3 = 600
+    elseif selected == "650オーブ" then
+        orbMultiplier3 = 650
+    elseif selected == "700オーブ" then
+        orbMultiplier3 = 700
+    elseif selected == "750オーブ" then
+        orbMultiplier3 = 750
+    elseif selected == "800オーブ" then
+        orbMultiplier3 = 800
+    elseif selected == "850オーブ" then
+        orbMultiplier3 = 850
+    elseif selected == "900オーブ" then
+        orbMultiplier3 = 900
+    elseif selected == "950オーブ" then
+        orbMultiplier3 = 950
+    elseif selected == "1000オーブ" then
+        orbMultiplier3 = 1000
+    elseif selected == "1050オーブ" then
+        orbMultiplier3 = 1050
+    elseif selected == "1100オーブ" then
+        orbMultiplier3 = 1100
+    elseif selected == "1150オーブ" then
+        orbMultiplier3 = 1150
+    elseif selected == "1200オーブ" then
+        orbMultiplier3 = 1200
+    elseif selected == "1250オーブ" then
+        orbMultiplier3 = 1250
+    elseif selected == "1300オーブ" then
+        orbMultiplier3 = 1300
+    elseif selected == "1350オーブ" then
+        orbMultiplier3 = 1350
+    elseif selected == "1400オーブ" then
+        orbMultiplier3 = 1400
+    elseif selected == "1450オーブ" then
+        orbMultiplier3 = 1450
+    elseif selected == "1500オーブ" then
+        orbMultiplier3 = 1500
+    end
+end)
+Tab2:CreateToggle("自動オーブ", function(state)
+    if state then 
+        autoOrb3 = true
+        while autoOrb3 do 
+            if not autoOrb3 then break end
+            if pingMonitorActive then
+                local ping = tonumber(string.match(game:GetService("Stats").Network.ServerStatsItem["Data Ping"]:GetValueString(), "%d+"))
+                if ping and ping > maxPing then
+                    repeat
+                        wait(1)
+                        ping = tonumber(string.match(game:GetService("Stats").Network.ServerStatsItem["Data Ping"]:GetValueString(), "%d+"))
+                    until ping and ping < minPing or not autoOrb3
+                    if not autoOrb3 then break end
+                end
+            end
+            local batchSize = math.ceil(orbMultiplier3 / 5)
+            local remainingOrbs = orbMultiplier3
+            local startTime = tick()
+            while remainingOrbs > 0 do
+                local currentBatch = math.min(batchSize, remainingOrbs)
+                for i = 1, currentBatch do
+                    game:GetService('ReplicatedStorage').rEvents.orbEvent:FireServer("collectOrb", optionOrb3, optionCity3)
+                end
+                remainingOrbs = remainingOrbs - currentBatch
+                wait(0.11)
+            end
+            wait(orbCooldown)
+        end 
+    else 
+        autoOrb3 = false
     end
 end)
