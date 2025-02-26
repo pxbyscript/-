@@ -1,1 +1,344 @@
+-- 絶対零度
+local AbsoluteZero = loadstring(game:HttpGet("https://raw.githubusercontent.com/pxbyscript/-/refs/heads/main/azlib"))()
+local Window = AbsoluteZero:CreateWindow("バージョン1", "スピード伝説")
 
+-- サービス
+local TeleportService = game:GetService("TeleportService")
+local Player = game:GetService("Players").LocalPlayer
+
+-- プレイヤー
+local placeId = game.PlaceId
+local player = game.Players.LocalPlayer
+
+-- 接続最適化
+local minPing = 450
+local maxPing = 2500
+local antiKickConnection
+
+-- レースファーム
+local race = "バージョン1"
+
+-- トレーディング
+local usernameTrade = ""
+
+-- 転生ファーム
+local rebamount = 0
+local autoRebirthStoppingPointCooldown = 0.5
+local autoRebirthCooldown = 0.5
+local rebirthSuccessful = false
+
+-- オーブファーム
+local orbCooldown = 0.4
+local orbMultiplier = 0
+local optionOrb = ""
+local optionCity = ""
+local orbMultiplier2 = 0
+local optionOrb2 = ""
+local optionCity2 = ""
+local orbMultiplier3 = 0
+local optionOrb3 = ""
+local optionCity3 = ""
+
+-- ペットの孵化
+local selectedbasicpettohatch = ""
+local selectedadvancedpettohatch = ""
+local selectedrarepettohatch = ""
+local selectedepicpettohatch = ""
+local selecteduniquepettohatch = ""
+local selectedomegapettohatch = ""
+
+-- ペットの進化
+local selectedbasicpettoevolve = ""
+local selectedadvancedpettoevolve = ""
+local selectedrarepettoevolve = ""
+local selectedepicpettoevolve = ""
+local selecteduniquepettoevolve = ""
+local selectedomegapettoevolve = ""
+
+-- テレポート
+local citiesteleport = ""
+local otherteleport = ""
+local spaceteleport = ""
+local desertteleport = ""
+local premiumTeleport = ""
+local premiumServerTeleport = ""
+
+-- 接続最適化
+local connectionEnhancer = false
+
+-- オーブ
+local primaryAutoOrbActive = false -- autoOrb1
+local secondaryAutoOrbActive = false -- autoOrb2
+local premiumAutoOrbActive = false -- autoOrb3
+
+-- レースファーム
+local autoRace1 = false
+local autoRace2 = false
+
+-- フープ
+local autoHoop = false
+
+-- 転生ファーム
+local autoRebirthStoppingPoint = false
+local autoRebirth = false
+
+-- ペットの孵化
+local hatchBasicPets = false
+local hatchAdvancedPets = false
+local hatchRarePets = false
+local hatchEpicPets = false
+local hatchUniquePets = false
+local hatchOmegaPets = false
+
+-- ペットの進化
+local evolveBasicPets = false
+local evolveAdvancedcPets = false
+local evolveRarePets = false
+local evolveEpicPets = false
+local evolveUniquePets = false
+local evolveOmegaPets = false
+
+-- クリスタル
+local redCrystal = false
+local lightningCrystal = false
+local yellowCrystal = false
+local purpleCrystal = false
+local blueCrystal = false
+local snowCrystal = false
+local lavaCrystal = false
+local infernoCrystal = false
+local electroLegendsCrystal = false
+local jungleCrystal = false
+local spaceCrystal = false
+local alienCrystal = false
+local desertCrystal = false
+local electroCrystal = false
+
+-- 関数
+game:GetService('ReplicatedStorage').raceInProgress.Changed:Connect(function()
+	if autoRace2 == true then		
+		if game:GetService('ReplicatedStorage').raceInProgress.Value == true then
+			game:GetService('ReplicatedStorage').rEvents.raceEvent:FireServer("joinRace")
+		end
+	end
+end)
+game:GetService('ReplicatedStorage').raceStarted.Changed:Connect(function()
+	if autoRace2 == true then
+		if game:GetService('ReplicatedStorage').raceStarted.Value == true then
+			for i, v in pairs(game:GetService('Workspace').raceMaps:GetChildren()) do
+				local OldFinishPosition = v.finishPart.CFrame
+				v.finishPart.CFrame = Player.Character.HumanoidRootPart.CFrame
+				wait()
+				v.finishPart.CFrame = OldFinishPosition
+			end
+		end
+		wait(2)
+	end
+end)
+
+-- タブ
+local Tab1 = Window:CreateTab("一般")
+local Tab2 = Window:CreateTab("オートファーム")
+local Tab3 = Window:CreateTab("転生ファーム")
+local Tab4 = Window:CreateTab("ペットの孵化")
+local Tab5 = Window:CreateTab("ペットの進化")
+local Tab6 = Window:CreateTab("クリスタル")
+local Tab7 = Window:CreateTab("究極")
+local Tab8 = Window:CreateTab("ナビゲーション")
+
+-- 一般
+Tab1:CreateSection("レースファーム")
+Tab1:CreateDropdown("レースタイプ", {"基本", "高度"}, function(ddrace)
+    if ddrace == "基本" then
+        race = "バージョン1"
+    elseif ddrace == "高度" then
+        race = "バージョン2"
+    end
+end)
+Tab1:CreateToggle("オートレース", function(state)
+    if state then 
+        if race == "バージョン1" then
+            autoRace1 = true 
+            while autoRace1 do 
+                wait()
+                local args = {
+                    [1] = "joinRace"
+                }
+                game:GetService("ReplicatedStorage"):WaitForChild("rEvents"):WaitForChild("raceEvent"):FireServer(unpack(args))
+                game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(48.3109131, 36.3147125, -8680.45312, -1, 0, 0, 0, 1, 0, 0, 0, -1)
+                wait(0.4)
+                game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(1686.07495, 36.3147125, -5946.63428, -0.984812617, 0, 0.173621148, 0, 1, 0, -0.173621148, 0, -0.984812617)
+                wait(0.4)
+                game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(1001.33118, 36.3147125, -10986.2178, -0.996191859, 0, -0.0871884301, 0, 1, 0, 0.0871884301, 0, -0.996191859)
+                wait(0.4)
+            end 
+        elseif race == "バージョン2" then
+            autoRace2 = true
+        end
+    else 
+        autoRace2 = false 
+        autoRace1 = false 
+    end
+end)
+
+Tab1:CreateSection("フープファーム")
+Tab1:CreateButton("フープをクリーン", function()
+    local player = game.Players.LocalPlayer
+    local hoopGui = player:WaitForChild("PlayerGui"):FindFirstChild("hoopGui")
+    if hoopGui then
+        local screenGradient = hoopGui:FindFirstChild("screenGradient")
+        if screenGradient then
+            screenGradient:Destroy()
+        end
+    end
+    local hoopsFolder = game.Workspace:FindFirstChild("Hoops")
+    if hoopsFolder then
+        for _, hoop in ipairs(hoopsFolder:GetChildren()) do
+            local hoopParticle = hoop:FindFirstChild("hoopParticle")
+            if hoopParticle then
+                hoopParticle:Destroy()
+            end
+            local hoopSound = hoop:FindFirstChild("hoopSound")
+            if hoopSound then
+                hoopSound:Destroy()
+            end
+            local playerParticle = hoop:FindFirstChild("playerParticle")
+            if playerParticle then
+                playerParticle:Destroy()
+            end
+        end
+    end 
+end)
+Tab1:CreateToggle("オートフープ", function(state)
+    if state then 
+        autoHoop = true 
+        while autoHoop do 
+            wait()
+            for i,v in pairs(game:GetService("Workspace").Hoops:GetChildren()) do
+                firetouchinterest(v, game.Players.LocalPlayer.Character.HumanoidRootPart, 0)
+                wait()
+                firetouchinterest(v, game.Players.LocalPlayer.Character.HumanoidRootPart, 1)
+            end
+        end
+    else 
+        autoHoop = false 
+    end
+end)  
+
+Tab1:CreateLabel("完璧に動作しない場合があります!")
+
+Tab1:CreateSection("ピン最適化")
+Tab1:CreateBox("最小ピン", function(input)
+    minPing = tonumber(input) or 450
+end)
+Tab1:CreateBox("最大ピン", function(input)
+    maxPing = tonumber(input) or 2500
+end)
+Tab1:CreateLabel("デフォルト値: 400 - 2500")
+Tab1:CreateToggle("有効", function(state)
+    pingMonitorActive = state
+    if pingMonitorActive then
+        spawn(function()
+            while pingMonitorActive do
+                local ping = game:GetService("Stats").Network.ServerStatsItem["Data Ping"]:GetValueString()
+                ping = tonumber(string.match(ping, "%d+"))
+                if ping and maxPing and ping > maxPing then
+                    repeat
+                        wait(1)
+                        ping = tonumber(string.match(
+                            game:GetService("Stats").Network.ServerStatsItem["Data Ping"]:GetValueString(),
+                            "%d+"
+                        ))
+                    until (ping and ping < minPing) or not pingMonitorActive
+                    if pingMonitorActive then
+                    end
+                end    
+                wait(0.5)
+            end
+        end)
+    end
+end)
+
+Tab1:CreateSection("その他")
+Tab1:CreateToggle("接続強化", function(state)
+    if state then
+        connectionEnhancer = true
+        while connectionEnhancer == true do wait()
+            game:GetService("NetworkClient"):SetOutgoingKBPSLimit(800000)
+            game:GetService("NetworkClient"):SetIncomingKBPSLimit(800000)
+            wait(5)
+        end
+    else
+        connectionEnhancer = false
+    end
+end)
+Tab1:CreateToggle("フリーズ", function(state)
+    if state then 
+        game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").Anchored = true
+    else 
+        game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").Anchored = false
+    end 
+end)
+Tab1:CreateToggle("ブル", function(state)
+    if state then 
+        local player = game.Players.LocalPlayer
+        local character = player.Character or player.CharacterAdded:Wait()
+        local newProperties = PhysicalProperties.new(30, 0.3, 0.5)
+        for _, part in ipairs(character:GetDescendants()) do
+            if part:IsA("BasePart") then
+                part.CustomPhysicalProperties = newProperties
+            end
+        end
+    else 
+        local player = game.Players.LocalPlayer
+        local character = player.Character or player.CharacterAdded:Wait()
+        for _, part in ipairs(character:GetDescendants()) do
+            if part:IsA("BasePart") then
+                part.CustomPhysicalProperties = nil
+            end
+        end
+    end 
+end)
+Tab1:CreateToggle("アイドル防止", function(state)
+    if state then
+        antiKickConnection = game:service'Players'.LocalPlayer.Idled:connect(function()
+            game:GetService('VirtualUser'):CaptureController()
+            game:GetService('VirtualUser'):ClickButton2(Vector2.new())
+        end)
+    else
+        if antiKickConnection then
+            antiKickConnection:Disconnect()
+            antiKickConnection = nil
+        end
+    end 
+end)
+
+Tab1:CreateSection("トレード")
+Tab1:CreateToggle("トレード有効", function(state)
+    if state then 
+        local args = { 
+            [1] = "enableTrading" 
+        }
+        game:GetService("ReplicatedStorage"):WaitForChild("rEvents"):WaitForChild("tradingEvent"):FireServer(unpack(args)) 
+    else 
+        local args = { 
+            [1] = "disableTrading" 
+        }
+        game:GetService("ReplicatedStorage"):WaitForChild("rEvents"):WaitForChild("tradingEvent"):FireServer(unpack(args)) 
+    end 
+end)
+Tab1:CreateBox("ターゲットユーザー名", function(input)
+    usernameTrade = input
+end)
+Tab1:CreateButton("トレード送信", function()
+    if usernameTrade and usernameTrade ~= "" then
+        local playerTrade = game:GetService("Players")[usernameTrade]
+        if playerTrade then
+            local args = {
+                [1] = "sendTradeRequest",
+                [2] = playerTrade
+            }
+            game:GetService("ReplicatedStorage").rEvents.tradingEvent:FireServer(unpack(args))
+        end
+    end
+end)
