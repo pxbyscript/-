@@ -654,7 +654,7 @@ end)
 
 -- ペットの孵化
 Tab4:CreateSection("基本ペットを孵化")
-Tab4:AddDropdown("ペットを選択", {"赤いウサギ","赤い子猫","青いウサギ","銀の犬",'黄色いスクイーク'}, function(input)
+Tab4:CreateDropdown("ペットを選択", {"赤いウサギ","赤い子猫","青いウサギ","銀の犬",'黄色いスクイーク'}, function(input)
     if input == "赤いウサギ" then
         selectedbasicpettohatch = "Red Bunny"
     elseif input == "赤い子猫" then
@@ -682,7 +682,7 @@ Tab4:CreateToggle("自動孵化",function(state)
 end)
 
 Tab4:CreateSection("上級ペットを孵化")
-Tab4:AddDropdown("ペットを選択", {"緑のヴァンピー","ダークゴーレム","ピンクの蝶","黄色い蝶","緑のゴーレム"}, function(input)
+Tab4:CreateDropdown("ペットを選択", {"緑のヴァンピー","ダークゴーレム","ピンクの蝶","黄色い蝶","緑のゴーレム"}, function(input)
     if input == "緑のヴァンピー" then
         selectedadvancedpettohatch = "Green Vampy"
     elseif input == "ダークゴーレム" then
@@ -710,7 +710,7 @@ Tab4:CreateToggle("自動孵化",function(state)
 end)
 
 Tab4:CreateSection("レアペットを孵化")
-Tab4:AddDropdown("ペットを選択", {"紫のペガサス","ゴールデンエンジェル","オレンジのペガサス","オレンジのファルコン","青いファイアキャスター","白いフェニックス","赤いフェニックス","赤いファイアキャスター"}, function(input)
+Tab4:CreateDropdown("ペットを選択", {"紫のペガサス","ゴールデンエンジェル","オレンジのペガサス","オレンジのファルコン","青いファイアキャスター","白いフェニックス","赤いフェニックス","赤いファイアキャスター"}, function(input)
     if input == "紫のペガサス" then
         selectedrarepettohatch = "Purple Pegasus"
     elseif input == "ゴールデンエンジェル" then
@@ -744,7 +744,7 @@ Tab4:CreateToggle("自動孵化",function(state)
 end)
 
 Tab4:CreateSection("エピックペットを孵化")
-Tab4:AddDropdown("ペットを選択", {"ゴールデンフェニックス","緑のファイアキャスター","ボルテックファルコン","青いフェニックス","ディバインペガサス"}, function(input)
+Tab4:CreateDropdown("ペットを選択", {"ゴールデンフェニックス","緑のファイアキャスター","ボルテックファルコン","青いフェニックス","ディバインペガサス"}, function(input)
     if input == "ゴールデンフェニックス" then
         selectedepicpettohatch = "Golden Phoenix"
     elseif input == "緑のファイアキャスター" then
@@ -772,7 +772,7 @@ Tab4:CreateToggle("自動孵化",function(state)
 end)
 
 Tab4:CreateSection("ユニークペットを孵化")
-Tab4:AddDropdown("ペットを選択", {"フレイミングハリネズミ","エレクトログーレム","ボルテックファルコン","ヴォイドドラゴン","ウルトラバーディ","クオンタムドラゴン","ツンドラドラゴン","マジックバタフライ","マエストロドッグ","ゴールデンバイキング","スピーディセンセイ"}, function(input)
+Tab4:CreateDropdown("ペットを選択", {"フレイミングハリネズミ","エレクトログーレム","ボルテックファルコン","ヴォイドドラゴン","ウルトラバーディ","クオンタムドラゴン","ツンドラドラゴン","マジックバタフライ","マエストロドッグ","ゴールデンバイキング","スピーディセンセイ"}, function(input)
     if input == "フレイミングハリネズミ" then
         selecteduniquepettohatch = "Flaming Hedgehog"
     elseif input == "エレクトログーレム" then
@@ -812,7 +812,7 @@ Tab4:CreateToggle("自動孵化",function(state)
 end)
 
 Tab4:CreateSection("オメガペットを孵化")
-Tab4:AddDropdown("ペットを選択", {"ソウルフュージョンドッグ","ハイパーソニックペガサス","ダークソウルバーディ","エターナルネビュラドラゴン","シャドウズエッジキティ","アルティメットオーバードライブバニー","スウィフトサムライ"}, function(input)
+Tab4:CreateDropdown("ペットを選択", {"ソウルフュージョンドッグ","ハイパーソニックペガサス","ダークソウルバーディ","エターナルネビュラドラゴン","シャドウズエッジキティ","アルティメットオーバードライブバニー","スウィフトサムライ"}, function(input)
     if input == "ソウルフュージョンドッグ" then
         selectedomegapettohatch = "Soul Fusion Dog"
     elseif input == "ハイパーソニックペガサス" then
@@ -845,7 +845,7 @@ end)
 
 -- 基本ペットの進化
 Tab5:CreateSection("基本ペットの進化")
-Tab5:AddDropdown("ペットを選択", {"レッドバニー","レッドキティ","ブルーバニー","シルバードッグ",'イエロースクイーク'}, function(input)
+Tab5:CreateDropdown("ペットを選択", {"レッドバニー","レッドキティ","ブルーバニー","シルバードッグ",'イエロースクイーク'}, function(input)
     if input == "レッドバニー" then
         selectedbasicpettoevolve = "Red Bunny"
     elseif input == "レッドキティ" then
@@ -875,7 +875,7 @@ end)
 
 -- 上級ペットの進化
 Tab5:CreateSection("上級ペットの進化")
-Tab5:AddDropdown("ペットを選択", {"グリーンヴァンピー","ダークゴーレム","ピンクバタフライ","イエローバタフライ","グリーンゴーレム"}, function(input)
+Tab5:CreateDropdown("ペットを選択", {"グリーンヴァンピー","ダークゴーレム","ピンクバタフライ","イエローバタフライ","グリーンゴーレム"}, function(input)
     if input == "グリーンヴァンピー" then
         selectedadvancedpettoevolve = "Green Vampy"
     elseif input == "ダークゴーレム" then
@@ -905,7 +905,7 @@ end)
 
 -- レアペットの進化
 Tab5:CreateSection("レアペットの進化")
-Tab5:AddDropdown("ペットを選択", {"パープルペガサス","ゴールデンエンジェル","オレンジペガサス","オレンジファルコン","ブルーファイアキャスター","ホワイトフェニックス","レッドフェニックス","レッドファイアキャスター"}, function(input)
+Tab5:CreateDropdown("ペットを選択", {"パープルペガサス","ゴールデンエンジェル","オレンジペガサス","オレンジファルコン","ブルーファイアキャスター","ホワイトフェニックス","レッドフェニックス","レッドファイアキャスター"}, function(input)
     if input == "パープルペガサス" then
         selectedrarepettoevolve = "Purple Pegasus"
     elseif input == "ゴールデンエンジェル" then
@@ -941,7 +941,7 @@ end)
 
 -- エピックペットの進化
 Tab5:CreateSection("エピックペットの進化")
-Tab5:AddDropdown("ペットを選択", {"ゴールデンフェニックス","グリーンファイアキャスター","ボルタイックファルコン","ブルーフェニックス","ディヴァインペガサス"}, function(input)
+Tab5:CreateDropdown("ペットを選択", {"ゴールデンフェニックス","グリーンファイアキャスター","ボルタイックファルコン","ブルーフェニックス","ディヴァインペガサス"}, function(input)
     if input == "ゴールデンフェニックス" then
         selectedepicpettoevolve = "Golden Phoenix"
     elseif input == "グリーンファイアキャスター" then
@@ -971,7 +971,7 @@ end)
 
 -- ユニークペットの進化
 Tab5:CreateSection("ユニークペットの進化")
-Tab5:AddDropdown("ペットを選択", {"フレイミングヘッジホッグ","エレクトログーレム","ボルタイックファルコン","ヴォイドドラゴン","ウルトラバーディ","クアンタムドラゴン","ツンドラドラゴン","マジックバタフライ","マエストロドッグ","ゴールデンバイキング","スピーディーセンセイ"}, function(input)
+Tab5:CreateDropdown("ペットを選択", {"フレイミングヘッジホッグ","エレクトログーレム","ボルタイックファルコン","ヴォイドドラゴン","ウルトラバーディ","クアンタムドラゴン","ツンドラドラゴン","マジックバタフライ","マエストロドッグ","ゴールデンバイキング","スピーディーセンセイ"}, function(input)
     if input == "フレイミングヘッジホッグ" then
         selecteduniquepettoevolve = "Flaming Hedgehog"
     elseif input == "エレクトログーレム" then
@@ -1013,7 +1013,7 @@ end)
 
 -- オメガペットの進化
 Tab5:CreateSection("オメガペットの進化")
-Tab5:AddDropdown("ペットを選択", {"ソウルフュージョンドッグ","ハイパーソニックペガサス","ダークソウルバーディ","エターナルネビュラドラゴン","シャドウズエッジキティ","アルティメットオーバードライブバニー","スウィフトサムライ"}, function(input)
+Tab5:CreateDropdown("ペットを選択", {"ソウルフュージョンドッグ","ハイパーソニックペガサス","ダークソウルバーディ","エターナルネビュラドラゴン","シャドウズエッジキティ","アルティメットオーバードライブバニー","スウィフトサムライ"}, function(input)
     if input == "ソウルフュージョンドッグ" then
         selectedomegapettoevolve = "Soul Fusion Dog"
     elseif input == "ハイパーソニックペガサス" then
