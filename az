@@ -1,3 +1,15 @@
--- 洗脳者 (pxby) によって作られました
-print("絶対零度へようこそ!")
-print("ご利用いただきありがとうございます!")
+local groupId = 35676888
+
+if not game.Players.LocalPlayer:IsInGroup(groupId) then
+    game.Players.LocalPlayer:Kick("まずグループに参加してください！")
+end
+
+if game.PlaceId == 3101667897 then -- Legends Of Speed [City]
+
+elseif game.PlaceId == 3232996272 then -- Legends Of Speed [Space]
+
+elseif game.PlaceId == 3276265788 then -- Legends Of Speed [Desert]
+    
+else
+    game.Players.LocalPlayer:Kick("まずグループに参加してください！")
+end
